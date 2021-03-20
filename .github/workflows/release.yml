@@ -1,0 +1,48 @@
+name: Continuous Deployment
+on:
+  push:
+    branches:
+      - "main"
+env:
+  PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+  PYPI_TOKEN_TEST: ${{ secrets.PYPI_TOKEN_TEST }}
+  GH_TOKEN: ${{ secrets.CI_TOKEN }}
+
+jobs:
+  release:
+    name: Create a release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.CI_TOKEN }}
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Add poetry to PATH
+      run: |
+        echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+
+    # Install poetry then prod-only deps then build
+    # After building install dev dependencies for access to semantic-release
+    - name: Install dependencies
+      run: |
+        make poetry
+        make deps-prod
+        make build
+        make deps
+
+    - name: Create release
+      run: |
+        git config --global user.name "${GITHUB_ACTOR}"
+        git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+        poetry run semantic-release publish \
+        -v DEBUG \
+        -D build_command=""
+      env:
+        PYPI_TOKEN: ${{ env.PYPI_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

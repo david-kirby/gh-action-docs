@@ -1,0 +1,56 @@
+name: Continuous Integration
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize # This occurs when a source branch of a PR receives a new commit
+      - reopened
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Add poetry to PATH
+      run: |
+        echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+
+    - name: Install dependencies
+      run: |
+        make poetry
+        make deps
+
+    - name: Lint
+      run: make lint
+
+  tests:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Add poetry to PATH
+      run: |
+        echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+
+    - name: Install dependencies
+      run: |
+        make poetry
+        make deps
+
+    - name: Run tests
+      run: make tests

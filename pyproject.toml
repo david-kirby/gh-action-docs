@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "gh-action-docs"
+version = "1.0.0"
+description = "Generate markdown documentation for a Github Action"
+authors = ["david-kirby <57732284+david-kirby@users.noreply.github.com>"]
+license = "MIT"
+repository = "https://github.com/david-kirby/gh-action-docs"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+PyYAML = "^5.4.1"
+
+[tool.poetry.dev-dependencies]
+python-semantic-release = "^7.15.0"
+pre-commit = "^2.11.1"
+black = "^20.8b1"
+flake8 = "^3.9.0"
+
+[tool.poetry.scripts]
+gh-action-docs='gh_action_docs.app:main'
+
+[tool.semantic_release]
+version_toml = "pyproject.toml:tool.poetry.version"
+branch = "main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
