@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gh-action-docs"
-version = "1.1.1"
+version = "1.1.2"
 description = "Generate markdown documentation for a Github Action"
 authors = ["david-kirby <57732284+david-kirby@users.noreply.github.com>"]
 license = "MIT"
