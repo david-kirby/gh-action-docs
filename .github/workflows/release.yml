@@ -31,8 +31,6 @@ jobs:
     - name: Install dependencies
       run: |
         make poetry
-        make deps-prod
-        make build
         make deps
 
     - name: Create release
@@ -41,7 +39,7 @@ jobs:
         git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
         poetry run semantic-release publish \
         -v DEBUG \
-        -D build_command=""
+        -D build_command="make build"
       env:
         PYPI_TOKEN: ${{ env.PYPI_TOKEN }}
         GH_TOKEN: ${{ env.GH_TOKEN }}
